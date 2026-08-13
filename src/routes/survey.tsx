@@ -227,6 +227,29 @@ function SurveyPage() {
             />
           </Field>
 
+          <Divider />
+
+          {/* Q4 — Email (optional) */}
+          <Field
+            number={4}
+            label="Would you like to take part in further studies? If so, please leave your email."
+            hint="This is entirely optional — you can skip this question and leave the box empty. Your email will only be used to contact you about future research."
+            error={touched.email ? errors.email : undefined}
+          >
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+              placeholder="optional — e.g. your.name@example.com"
+              className="w-full max-w-sm rounded-lg border border-input bg-background px-3 py-2.5 text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/30"
+              aria-label="Email address (optional)"
+            />
+            <p className="mt-2 text-xs text-muted-foreground">
+              Leaving this blank is perfectly fine.
+            </p>
+          </Field>
+
           {/* Next */}
           <div className="mt-8 flex flex-col-reverse items-center justify-between gap-3 sm:flex-row">
             <p className="text-xs text-muted-foreground">
