@@ -50,7 +50,7 @@ function QuestionnairePage() {
         </div>
         <div className="mt-6">
           <Link
-            to="/survey"
+            to="/"
             className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-medium text-foreground transition hover:bg-accent"
           >
             <svg

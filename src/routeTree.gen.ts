@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as QuestionnaireRouteImport } from './routes/questionnaire'
-import { Route as SurveyRouteImport } from './routes/survey'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,40 +22,31 @@ const QuestionnaireRoute = QuestionnaireRouteImport.update({
   path: '/questionnaire',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SurveyRoute = SurveyRouteImport.update({
-  id: '/survey',
-  path: '/survey',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/questionnaire': typeof QuestionnaireRoute
-  '/survey': typeof SurveyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/questionnaire': typeof QuestionnaireRoute
-  '/survey': typeof SurveyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/questionnaire': typeof QuestionnaireRoute
-  '/survey': typeof SurveyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/questionnaire' | '/survey'
+  fullPaths: '/' | '/questionnaire'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/questionnaire' | '/survey'
-  id: '__root__' | '/' | '/questionnaire' | '/survey'
+  to: '/' | '/questionnaire'
+  id: '__root__' | '/' | '/questionnaire'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   QuestionnaireRoute: typeof QuestionnaireRoute
-  SurveyRoute: typeof SurveyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,20 +65,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuestionnaireRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/survey': {
-      id: '/survey'
-      path: '/survey'
-      fullPath: '/survey'
-      preLoaderRoute: typeof SurveyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   QuestionnaireRoute: QuestionnaireRoute,
-  SurveyRoute: SurveyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
