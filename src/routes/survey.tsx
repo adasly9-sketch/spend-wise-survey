@@ -49,12 +49,14 @@ interface ErrorState {
   age?: string;
   spendRange?: string;
   career?: string;
+  email?: string;
 }
 
 interface TouchedState {
   age?: boolean;
   spendRange?: boolean;
   career?: boolean;
+  email?: boolean;
 }
 
 function SurveyPage() {
