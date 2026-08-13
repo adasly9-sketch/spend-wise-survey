@@ -162,6 +162,19 @@ function SurveyPage() {
             hint="Pick the range that best fits your typical spending. Disposable income means the money left after essential bills (rent, food, utilities)."
             error={touched.spendRange ? errors.spendRange : undefined}
           >
+            <div className="mb-4 border-l-2 border-primary/40 pl-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Includes, for example
+              </p>
+              <p className="mt-1 text-sm text-foreground">
+                {EXAMPLE_ITEMS.join(", ")}.
+              </p>
+              <p className="mt-2 text-xs italic text-muted-foreground">
+                Think about recurring and occasional spending together — not a
+                single month, but your typical pattern over a year.
+              </p>
+            </div>
+
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               {SPEND_RANGES.map((opt) => {
                 const selected = spendRange === opt.value;
@@ -188,25 +201,6 @@ function SurveyPage() {
             </div>
           </Field>
 
-          <div className="mt-4 rounded-xl bg-muted/60 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              These purchases include, for example:
-            </p>
-            <ul className="mt-2 flex flex-wrap gap-2">
-              {EXAMPLE_ITEMS.map((item) => (
-                <li
-                  key={item}
-                  className="rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-foreground"
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-3 text-xs text-muted-foreground">
-              Think about recurring and occasional spending together — not a single
-              month, but your typical pattern over a year.
-            </p>
-          </div>
 
           <Divider />
 
