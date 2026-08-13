@@ -53,6 +53,8 @@ function SurveyPage() {
   const [career, setCareer] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  // typed accessors to satisfy no-index-signature lint rule
+  const err = (k: string) => (touched[k] ? errors[k] : undefined);
 
   const ageNum = Number(age);
   const ageValid = age !== "" && Number.isInteger(ageNum) && ageNum >= 16 && ageNum <= 100;
