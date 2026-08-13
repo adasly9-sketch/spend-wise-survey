@@ -45,16 +45,26 @@ const EXAMPLE_ITEMS = [
   "Accessories",
 ];
 
+interface ErrorState {
+  age?: string;
+  spendRange?: string;
+  career?: string;
+}
+
+interface TouchedState {
+  age?: boolean;
+  spendRange?: boolean;
+  career?: boolean;
+}
+
 function SurveyPage() {
   const navigate = useNavigate();
 
   const [age, setAge] = useState("");
   const [spendRange, setSpendRange] = useState<string>("");
   const [career, setCareer] = useState("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
-  // typed accessors to satisfy no-index-signature lint rule
-  const err = (k: string) => (touched[k] ? errors[k] : undefined);
+  const [errors, setErrors] = useState<ErrorState>({});
+  const [touched, setTouched] = useState<TouchedState>({});
 
   const ageNum = Number(age);
   const ageValid = age !== "" && Number.isInteger(ageNum) && ageNum >= 16 && ageNum <= 100;
@@ -62,13 +72,13 @@ function SurveyPage() {
   const careerValid = career.trim().length >= 2;
 
   const validate = () => {
-    const next: Record<string, string> = {};
+    const next: ErrorState = {};
     if (!ageValid) next.age = "Please enter a whole number between 16 and 100.";
     if (!spendValid) next.spendRange = "Please select an estimated range.";
     if (!careerValid) next.career = "Please describe your current occupation or field.";
     setErrors(next);
     setTouched({ age: true, spendRange: true, career: true });
-    return Object.keys(next).length === 0;
+    return !next.age && !next.spendRange && !next.career;
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -149,7 +159,7 @@ function SurveyPage() {
           <Field
             number={2}
             label="Roughly what share of your disposable income do you spend on physical-appearance-related purchases?"
-            hint="Pick the range that best fits your typical monthly or yearly spending. Disposable income means the money left after essential bills (rent, food, utilities)."
+            hint="Pick the range that best fits your typical spending. Disposable income means the money left after essential bills (rent, food, utilities)."
             error={touched.spendRange ? errors.spendRange : undefined}
           >
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -263,7 +273,7 @@ function Field({
   number: number;
   label: string;
   hint?: string;
-  error?: string;
+  error?: string | undefined;
   children: React.ReactNode;
 }) {
   return (
