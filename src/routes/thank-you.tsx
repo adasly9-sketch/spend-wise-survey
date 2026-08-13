@@ -64,9 +64,9 @@ function ThankYouPage() {
         <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
           Thank you
         </h1>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground whitespace-pre-line">
           {declined
-            ? "You chose not to take part. No data has been collected from you, and none will be stored."
+            ? "You chose not to take part in this study.\u00A0\nNo data has been collected from you, and none will be stored."
             : "Thank you for your time. No data has been collected from you."}
         </p>
         <div className="mt-8">
