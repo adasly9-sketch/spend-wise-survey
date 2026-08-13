@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as QuestionnaireRouteImport } from './routes/questionnaire'
+import { Route as SurveyRouteImport } from './routes/survey'
 import { Route as ThankYouRouteImport } from './routes/thank-you'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const QuestionnaireRoute = QuestionnaireRouteImport.update({
   path: '/questionnaire',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SurveyRoute = SurveyRouteImport.update({
+  id: '/survey',
+  path: '/survey',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ThankYouRoute = ThankYouRouteImport.update({
   id: '/thank-you',
   path: '/thank-you',
@@ -32,30 +38,34 @@ const ThankYouRoute = ThankYouRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/questionnaire': typeof QuestionnaireRoute
+  '/survey': typeof SurveyRoute
   '/thank-you': typeof ThankYouRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/questionnaire': typeof QuestionnaireRoute
+  '/survey': typeof SurveyRoute
   '/thank-you': typeof ThankYouRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/questionnaire': typeof QuestionnaireRoute
+  '/survey': typeof SurveyRoute
   '/thank-you': typeof ThankYouRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/questionnaire' | '/thank-you'
+  fullPaths: '/' | '/questionnaire' | '/survey' | '/thank-you'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/questionnaire' | '/thank-you'
-  id: '__root__' | '/' | '/questionnaire' | '/thank-you'
+  to: '/' | '/questionnaire' | '/survey' | '/thank-you'
+  id: '__root__' | '/' | '/questionnaire' | '/survey' | '/thank-you'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   QuestionnaireRoute: typeof QuestionnaireRoute
+  SurveyRoute: typeof SurveyRoute
   ThankYouRoute: typeof ThankYouRoute
 }
 
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuestionnaireRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/survey': {
+      id: '/survey'
+      path: '/survey'
+      fullPath: '/survey'
+      preLoaderRoute: typeof SurveyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/thank-you': {
       id: '/thank-you'
       path: '/thank-you'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   QuestionnaireRoute: QuestionnaireRoute,
+  SurveyRoute: SurveyRoute,
   ThankYouRoute: ThankYouRoute,
 }
 export const routeTree = rootRouteImport
