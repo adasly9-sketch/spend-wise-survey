@@ -94,6 +94,7 @@ function SurveyPage() {
       age: ageNum,
       spendRange,
       career: career.trim(),
+      email: email.trim() || null,
       submittedAt: new Date().toISOString(),
     };
 
