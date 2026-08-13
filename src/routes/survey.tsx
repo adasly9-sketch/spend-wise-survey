@@ -65,6 +65,7 @@ function SurveyPage() {
   const [age, setAge] = useState("");
   const [spendRange, setSpendRange] = useState<string>("");
   const [career, setCareer] = useState("");
+  const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<ErrorState>({});
   const [touched, setTouched] = useState<TouchedState>({});
 
@@ -72,15 +73,17 @@ function SurveyPage() {
   const ageValid = age !== "" && Number.isInteger(ageNum) && ageNum >= 16 && ageNum <= 100;
   const spendValid = spendRange !== "";
   const careerValid = career.trim().length >= 2;
+  const emailValid = email.trim() === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
   const validate = () => {
     const next: ErrorState = {};
     if (!ageValid) next.age = "Please enter a whole number between 16 and 100.";
     if (!spendValid) next.spendRange = "Please select an estimated range.";
     if (!careerValid) next.career = "Please describe your current occupation or field.";
+    if (!emailValid) next.email = "Please enter a valid email address, or leave this field empty.";
     setErrors(next);
-    setTouched({ age: true, spendRange: true, career: true });
-    return !next.age && !next.spendRange && !next.career;
+    setTouched({ age: true, spendRange: true, career: true, email: true });
+    return !next.age && !next.spendRange && !next.career && !next.email;
   };
 
   const handleSubmit = (e: FormEvent) => {
