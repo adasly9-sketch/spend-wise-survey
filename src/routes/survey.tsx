@@ -49,12 +49,14 @@ interface ErrorState {
   age?: string;
   spendRange?: string;
   career?: string;
+  email?: string;
 }
 
 interface TouchedState {
   age?: boolean;
   spendRange?: boolean;
   career?: boolean;
+  email?: boolean;
 }
 
 function SurveyPage() {
@@ -63,6 +65,7 @@ function SurveyPage() {
   const [age, setAge] = useState("");
   const [spendRange, setSpendRange] = useState<string>("");
   const [career, setCareer] = useState("");
+  const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<ErrorState>({});
   const [touched, setTouched] = useState<TouchedState>({});
 
@@ -70,15 +73,17 @@ function SurveyPage() {
   const ageValid = age !== "" && Number.isInteger(ageNum) && ageNum >= 16 && ageNum <= 100;
   const spendValid = spendRange !== "";
   const careerValid = career.trim().length >= 2;
+  const emailValid = email.trim() === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
   const validate = () => {
     const next: ErrorState = {};
     if (!ageValid) next.age = "Please enter a whole number between 16 and 100.";
     if (!spendValid) next.spendRange = "Please select an estimated range.";
     if (!careerValid) next.career = "Please describe your current occupation or field.";
+    if (!emailValid) next.email = "Please enter a valid email address, or leave this field empty.";
     setErrors(next);
-    setTouched({ age: true, spendRange: true, career: true });
-    return !next.age && !next.spendRange && !next.career;
+    setTouched({ age: true, spendRange: true, career: true, email: true });
+    return !next.age && !next.spendRange && !next.career && !next.email;
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -89,6 +94,7 @@ function SurveyPage() {
       age: ageNum,
       spendRange,
       career: career.trim(),
+      email: email.trim() || null,
       submittedAt: new Date().toISOString(),
     };
 
@@ -219,6 +225,29 @@ function SurveyPage() {
               placeholder="e.g. software developer"
               className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/30"
             />
+          </Field>
+
+          <Divider />
+
+          {/* Q4 — Email (optional) */}
+          <Field
+            number={4}
+            label="Would you like to take part in further studies? If so, please leave your email."
+            hint="This is entirely optional — you can skip this question and leave the box empty. Your email will only be used to contact you about future research."
+            error={touched.email ? errors.email : undefined}
+          >
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+              placeholder="optional — e.g. your.name@example.com"
+              className="w-full max-w-sm rounded-lg border border-input bg-background px-3 py-2.5 text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/30"
+              aria-label="Email address (optional)"
+            />
+            <p className="mt-2 text-xs text-muted-foreground">
+              Leaving this blank is perfectly fine.
+            </p>
           </Field>
 
           {/* Next */}
