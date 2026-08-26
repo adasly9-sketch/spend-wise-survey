@@ -48,9 +48,9 @@ function QuestionnairePage() {
             here and I'll build them.
           </p>
         </div>
-        <div className="mt-6">
+        <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
-            to="/"
+            to="/survey"
             className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-medium text-foreground transition hover:bg-accent"
           >
             <svg
@@ -69,7 +69,28 @@ function QuestionnairePage() {
             </svg>
             Back to survey
           </Link>
+          <Link
+            to="/debriefing"
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90"
+          >
+            Finish &amp; see debriefing
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </Link>
         </div>
+
       </div>
     </div>
   );

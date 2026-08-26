@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DebriefingRouteImport } from './routes/debriefing'
 import { Route as QuestionnaireRouteImport } from './routes/questionnaire'
 import { Route as SurveyRouteImport } from './routes/survey'
 import { Route as ThankYouRouteImport } from './routes/thank-you'
@@ -17,6 +18,11 @@ import { Route as ThankYouRouteImport } from './routes/thank-you'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DebriefingRoute = DebriefingRouteImport.update({
+  id: '/debriefing',
+  path: '/debriefing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const QuestionnaireRoute = QuestionnaireRouteImport.update({
@@ -37,12 +43,14 @@ const ThankYouRoute = ThankYouRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/debriefing': typeof DebriefingRoute
   '/questionnaire': typeof QuestionnaireRoute
   '/survey': typeof SurveyRoute
   '/thank-you': typeof ThankYouRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/debriefing': typeof DebriefingRoute
   '/questionnaire': typeof QuestionnaireRoute
   '/survey': typeof SurveyRoute
   '/thank-you': typeof ThankYouRoute
@@ -50,20 +58,28 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/debriefing': typeof DebriefingRoute
   '/questionnaire': typeof QuestionnaireRoute
   '/survey': typeof SurveyRoute
   '/thank-you': typeof ThankYouRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/questionnaire' | '/survey' | '/thank-you'
+  fullPaths: '/' | '/debriefing' | '/questionnaire' | '/survey' | '/thank-you'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/questionnaire' | '/survey' | '/thank-you'
-  id: '__root__' | '/' | '/questionnaire' | '/survey' | '/thank-you'
+  to: '/' | '/debriefing' | '/questionnaire' | '/survey' | '/thank-you'
+  id:
+    | '__root__'
+    | '/'
+    | '/debriefing'
+    | '/questionnaire'
+    | '/survey'
+    | '/thank-you'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DebriefingRoute: typeof DebriefingRoute
   QuestionnaireRoute: typeof QuestionnaireRoute
   SurveyRoute: typeof SurveyRoute
   ThankYouRoute: typeof ThankYouRoute
@@ -76,6 +92,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/debriefing': {
+      id: '/debriefing'
+      path: '/debriefing'
+      fullPath: '/debriefing'
+      preLoaderRoute: typeof DebriefingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/questionnaire': {
@@ -104,6 +127,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DebriefingRoute: DebriefingRoute,
   QuestionnaireRoute: QuestionnaireRoute,
   SurveyRoute: SurveyRoute,
   ThankYouRoute: ThankYouRoute,
