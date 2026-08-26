@@ -39,14 +39,18 @@ const EXAMPLE_ITEMS = [
   "Makeup",
   "Skincare",
   "Anti-aging products",
-  "Fitness & body-composition products",
+  "Fitness & body-composition products (e.g. push-up bras, shaping underwear, gym supplements)",
   "Cosmetics",
   "Clothing",
   "Accessories",
 ];
 
+const GENDER_OPTIONS = ["Female", "Male", "Prefer not to say"] as const;
+
 interface ErrorState {
   age?: string;
+  gender?: string;
+  nationality?: string;
   spendRange?: string;
   career?: string;
   email?: string;
@@ -54,6 +58,8 @@ interface ErrorState {
 
 interface TouchedState {
   age?: boolean;
+  gender?: boolean;
+  nationality?: boolean;
   spendRange?: boolean;
   career?: boolean;
   email?: boolean;
