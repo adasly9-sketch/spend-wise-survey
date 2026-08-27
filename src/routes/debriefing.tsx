@@ -86,11 +86,7 @@ function DebriefingPage() {
                 <li key={item}>{item}</li>
               ))}
             </ul>
-            <p className="text-muted-foreground">
-              The specific purpose of the study was not fully disclosed before
-              participation so that knowledge of the research question would not
-              unnecessarily influence participants' responses.
-            </p>
+            <p className="text-muted-foreground">{"\n"}</p>
           </section>
 
           <div className="h-px w-full bg-border" />
