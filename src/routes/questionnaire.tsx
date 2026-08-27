@@ -47,7 +47,7 @@ function QuestionnairePage() {
   const [error, setError] = useState<string | null>(null);
 
   const total = BIG5_ITEMS.length;
-  const item = BIG5_ITEMS[index];
+  const item = BIG5_ITEMS[index] ?? BIG5_ITEMS[0]!;
   const answeredCount = Object.keys(answers).length;
   const currentAnswer = answers[item.id];
   const isLast = index === total - 1;
@@ -93,7 +93,7 @@ function QuestionnairePage() {
       career: part1?.career ?? null,
       email: part1?.email ?? null,
       answers,
-      scores,
+      scores: scores as unknown as Record<string, number>,
     });
 
     if (insertError) {
