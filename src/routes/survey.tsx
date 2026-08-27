@@ -69,6 +69,8 @@ function SurveyPage() {
   const navigate = useNavigate();
 
   const [age, setAge] = useState("");
+  const [gender, setGender] = useState<string>("");
+  const [nationality, setNationality] = useState("");
   const [spendRange, setSpendRange] = useState<string>("");
   const [career, setCareer] = useState("");
   const [email, setEmail] = useState("");
@@ -77,6 +79,8 @@ function SurveyPage() {
 
   const ageNum = Number(age);
   const ageValid = age !== "" && Number.isInteger(ageNum) && ageNum >= 16 && ageNum <= 100;
+  const genderValid = gender !== "";
+  const nationalityValid = nationality.trim().length >= 2;
   const spendValid = spendRange !== "";
   const careerValid = career.trim().length >= 2;
   const emailValid = email.trim() === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
@@ -84,12 +88,14 @@ function SurveyPage() {
   const validate = () => {
     const next: ErrorState = {};
     if (!ageValid) next.age = "Please enter a whole number between 16 and 100.";
+    if (!genderValid) next.gender = "Please select an option.";
+    if (!nationalityValid) next.nationality = "Please enter your nationality.";
     if (!spendValid) next.spendRange = "Please select an estimated range.";
     if (!careerValid) next.career = "Please describe your current occupation or field.";
     if (!emailValid) next.email = "Please enter a valid email address, or leave this field empty.";
     setErrors(next);
-    setTouched({ age: true, spendRange: true, career: true, email: true });
-    return !next.age && !next.spendRange && !next.career && !next.email;
+    setTouched({ age: true, gender: true, nationality: true, spendRange: true, career: true, email: true });
+    return !next.age && !next.gender && !next.nationality && !next.spendRange && !next.career && !next.email;
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -98,6 +104,8 @@ function SurveyPage() {
 
     const payload = {
       age: ageNum,
+      gender,
+      nationality: nationality.trim(),
       spendRange,
       career: career.trim(),
       email: email.trim() || null,
