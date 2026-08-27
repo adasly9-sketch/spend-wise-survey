@@ -39,13 +39,12 @@ function QuestionnairePage() {
           Questionnaire
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          This is Part 2 of the study. Your survey answers from Part 1 have been
-          saved. The detailed questionnaire questions will appear here.
+          This is second of the study. Your survey answers from Part 1 have been
+          saved. The questionnaire questions will appear here.
         </p>
         <div className="mt-8 rounded-2xl border border-dashed border-border bg-card p-8">
           <p className="text-sm text-muted-foreground">
-            Questionnaire content is coming next. Tell me the questions you'd like
-            here and I'll build them.
+            {"\n"}
           </p>
         </div>
         <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
