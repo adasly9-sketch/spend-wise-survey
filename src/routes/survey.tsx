@@ -297,9 +297,9 @@ function SurveyPage() {
 
           <Divider />
 
-          {/* Q4 — Email (optional) */}
+          {/* Q6 — Email (optional) */}
           <Field
-            number={4}
+            number={6}
             label="Would you like to take part in further studies? If so, please leave your email."
             hint="This is entirely optional — you can skip this question and leave the box empty. Your email will only be used to contact you about future research."
             error={touched.email ? errors.email : undefined}
