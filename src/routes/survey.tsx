@@ -69,6 +69,8 @@ function SurveyPage() {
   const navigate = useNavigate();
 
   const [age, setAge] = useState("");
+  const [gender, setGender] = useState<string>("");
+  const [nationality, setNationality] = useState("");
   const [spendRange, setSpendRange] = useState<string>("");
   const [career, setCareer] = useState("");
   const [email, setEmail] = useState("");
@@ -77,6 +79,8 @@ function SurveyPage() {
 
   const ageNum = Number(age);
   const ageValid = age !== "" && Number.isInteger(ageNum) && ageNum >= 16 && ageNum <= 100;
+  const genderValid = gender !== "";
+  const nationalityValid = nationality.trim().length >= 2;
   const spendValid = spendRange !== "";
   const careerValid = career.trim().length >= 2;
   const emailValid = email.trim() === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
@@ -84,12 +88,14 @@ function SurveyPage() {
   const validate = () => {
     const next: ErrorState = {};
     if (!ageValid) next.age = "Please enter a whole number between 16 and 100.";
+    if (!genderValid) next.gender = "Please select an option.";
+    if (!nationalityValid) next.nationality = "Please enter your nationality.";
     if (!spendValid) next.spendRange = "Please select an estimated range.";
     if (!careerValid) next.career = "Please describe your current occupation or field.";
     if (!emailValid) next.email = "Please enter a valid email address, or leave this field empty.";
     setErrors(next);
-    setTouched({ age: true, spendRange: true, career: true, email: true });
-    return !next.age && !next.spendRange && !next.career && !next.email;
+    setTouched({ age: true, gender: true, nationality: true, spendRange: true, career: true, email: true });
+    return !next.age && !next.gender && !next.nationality && !next.spendRange && !next.career && !next.email;
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -98,6 +104,8 @@ function SurveyPage() {
 
     const payload = {
       age: ageNum,
+      gender,
+      nationality: nationality.trim(),
       spendRange,
       career: career.trim(),
       email: email.trim() || null,
@@ -167,11 +175,65 @@ function SurveyPage() {
 
           <Divider />
 
-          {/* Q2 — Spending estimate */}
+          {/* Q2 — Gender */}
           <Field
             number={2}
+            label="What is your gender?"
+            hint="Select the option that best describes you."
+            error={touched.gender ? errors.gender : undefined}
+          >
+            <div className="flex flex-wrap gap-2">
+              {GENDER_OPTIONS.map((opt) => {
+                const selected = gender === opt;
+                return (
+                  <button
+                    key={opt}
+                    type="button"
+                    onClick={() => {
+                      setGender(opt);
+                      setTouched((t) => ({ ...t, gender: true }));
+                    }}
+                    aria-pressed={selected}
+                    className={
+                      "rounded-lg border px-4 py-2.5 text-sm font-medium transition " +
+                      (selected
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border bg-background text-foreground hover:border-ring hover:bg-accent")
+                    }
+                  >
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+          </Field>
+
+          <Divider />
+
+          {/* Q3 — Nationality */}
+          <Field
+            number={3}
+            label="What is your nationality?"
+            hint="Enter the country you hold citizenship or identify with (e.g. “Polish”, “Turkish”, “American”)."
+            error={touched.nationality ? errors.nationality : undefined}
+          >
+            <input
+              type="text"
+              value={nationality}
+              onChange={(e) => setNationality(e.target.value)}
+              onBlur={() => setTouched((t) => ({ ...t, nationality: true }))}
+              placeholder="e.g. Polish"
+              className="w-full max-w-sm rounded-lg border border-input bg-background px-3 py-2.5 text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/30"
+            />
+          </Field>
+
+          <Divider />
+
+          {/* Q4 — Spending estimate */}
+          <Field
+            number={4}
             label="Roughly what share of your disposable income do you spend on physical-appearance-related purchases?"
-            hint="Pick the range that best fits your typical spending. Disposable income means the money left after essential bills (rent, food, utilities)."
+            hint="Disposable income is the total amount of money you have left to spend or save after paying taxes and mandatory government deductions. Pick the range that best fits your typical spending."
             error={touched.spendRange ? errors.spendRange : undefined}
           >
             <div className="mb-4 border-l-2 border-primary/40 pl-4">
@@ -216,9 +278,9 @@ function SurveyPage() {
 
           <Divider />
 
-          {/* Q3 — Career */}
+          {/* Q5 — Career */}
           <Field
-            number={3}
+            number={5}
             label="What is your current career or occupation?"
             hint="Describe your job title, field, or professional area (e.g. “marketing manager”, “student”, “teacher”, “nurse”, “self-employed designer”)."
             error={touched.career ? errors.career : undefined}
@@ -235,9 +297,9 @@ function SurveyPage() {
 
           <Divider />
 
-          {/* Q4 — Email (optional) */}
+          {/* Q6 — Email (optional) */}
           <Field
-            number={4}
+            number={6}
             label="Would you like to take part in further studies? If so, please leave your email."
             hint="This is entirely optional — you can skip this question and leave the box empty. Your email will only be used to contact you about future research."
             error={touched.email ? errors.email : undefined}
