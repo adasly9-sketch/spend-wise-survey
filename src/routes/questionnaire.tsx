@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   BIG5_ITEMS,
@@ -39,32 +39,54 @@ interface Part1Payload {
   email: string | null;
 }
 
+// 50 items: 6 pages of 7 + 1 final page of 8.
+const PAGE_SIZE = 7;
+
+function buildPages(total: number) {
+  const pages: number[][] = [];
+  let start = 0;
+  while (start < total) {
+    const remaining = total - start;
+    const size = Math.min(PAGE_SIZE, remaining);
+    pages.push(Array.from({ length: size }, (_, i) => start + i));
+    start += size;
+  }
+  return pages;
+}
+
 function QuestionnairePage() {
   const navigate = useNavigate();
-  const [index, setIndex] = useState(0);
+  const [pageIndex, setPageIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const total = BIG5_ITEMS.length;
-  const item = BIG5_ITEMS[index] ?? BIG5_ITEMS[0]!;
+  const pages = useMemo(() => buildPages(total), [total]);
+  const currentPage = pages[pageIndex] ?? pages[0]!;
+  const isLastPage = pageIndex === pages.length - 1;
   const answeredCount = Object.keys(answers).length;
-  const currentAnswer = answers[item.id];
-  const isLast = index === total - 1;
   const progress = Math.round((answeredCount / total) * 100);
 
-  const select = (value: number) => {
-    setAnswers((a) => ({ ...a, [item.id]: value }));
+  const pageItems = currentPage.map((i) => BIG5_ITEMS[i]!);
+  const pageAnswered = pageItems.every((it) => answers[it.id] !== undefined);
+
+  const select = (id: number, value: number) => {
+    setAnswers((a) => ({ ...a, [id]: value }));
     setError(null);
   };
 
   const goNext = () => {
-    if (currentAnswer === undefined) return;
-    if (!isLast) setIndex((i) => i + 1);
+    if (!pageAnswered) return;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setPageIndex((i) => i + 1);
   };
 
   const goPrev = () => {
-    if (index > 0) setIndex((i) => i - 1);
+    if (pageIndex > 0) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setPageIndex((i) => i - 1);
+    }
   };
 
   const handleSubmit = async () => {
@@ -139,10 +161,10 @@ function QuestionnairePage() {
         <div className="sticky top-0 z-10 -mx-4 bg-background/90 px-4 py-3 backdrop-blur">
           <div className="mx-auto max-w-2xl">
             <div className="mb-1.5 flex items-center justify-between text-xs font-medium text-muted-foreground">
-              <span>
-                Question {index + 1} of {total}
-              </span>
               <span>{progress}% complete</span>
+              <span>
+                Page {pageIndex + 1} of {pages.length}
+              </span>
             </div>
             <div
               className="h-2 w-full overflow-hidden rounded-full bg-secondary"
@@ -160,59 +182,104 @@ function QuestionnairePage() {
           </div>
         </div>
 
-        {/* Question card */}
-        <div className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
-          <p
-            key={item.id}
-            className="min-h-[3.5rem] text-center text-xl font-semibold leading-snug text-foreground sm:text-2xl"
-          >
-            {item.text}
-          </p>
-
-          <div
-            className="mt-6 flex flex-col gap-2"
-            role="radiogroup"
-            aria-label={`Question ${index + 1}`}
-          >
-            {LIKERT_OPTIONS.map((opt) => {
-              const selected = currentAnswer === opt.value;
-              return (
-                <button
-                  key={opt.value}
-                  type="button"
-                  role="radio"
-                  aria-checked={selected}
-                  onClick={() => select(opt.value)}
-                  className={
-                    "w-full rounded-xl border px-4 py-3.5 text-left text-sm font-medium transition active:scale-[0.99] sm:text-center " +
-                    (selected
-                      ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                      : "border-border bg-background text-foreground hover:border-ring hover:bg-accent")
-                  }
+        {/* Questions */}
+        <div className="mt-6 space-y-4">
+          {pageItems.map((item, idx) => {
+            const currentAnswer = answers[item.id];
+            return (
+              <div
+                key={item.id}
+                className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6"
+              >
+                <p className="text-base font-semibold leading-snug text-foreground sm:text-lg">
+                  <span className="mr-2 text-muted-foreground">{item.id}.</span>
+                  {item.text}
+                </p>
+                <div
+                  className="mt-4 grid grid-cols-1 gap-1.5 sm:grid-cols-5"
+                  role="radiogroup"
+                  aria-label={`Question ${item.id}`}
                 >
-                  <span className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-full border border-current text-xs font-bold opacity-70">
-                    {opt.value}
-                  </span>
-                  {opt.label}
-                </button>
-              );
-            })}
-          </div>
+                  {LIKERT_OPTIONS.map((opt) => {
+                    const selected = currentAnswer === opt.value;
+                    return (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        role="radio"
+                        aria-checked={selected}
+                        onClick={() => select(item.id, opt.value)}
+                        title={opt.label}
+                        className={
+                          "flex items-center justify-center gap-1.5 rounded-lg border px-2 py-2.5 text-sm font-medium transition active:scale-[0.99] sm:flex-col sm:gap-1 " +
+                          (selected
+                            ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                            : "border-border bg-background text-foreground hover:border-ring hover:bg-accent")
+                        }
+                      >
+                        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-current text-xs font-bold opacity-80">
+                          {opt.value}
+                        </span>
+                        <span className="hidden sm:block sm:text-xs sm:font-normal sm:opacity-80">
+                          {opt.label}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
-          {error ? (
-            <p className="mt-4 text-center text-sm font-medium text-destructive">
-              {error}
-            </p>
-          ) : null}
+        {error ? (
+          <p className="mt-4 text-center text-sm font-medium text-destructive">
+            {error}
+          </p>
+        ) : null}
 
-          {/* Navigation */}
-          <div className="mt-8 flex items-center justify-between gap-3">
+        {/* Navigation */}
+        <div className="mt-8 flex items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={goPrev}
+            disabled={pageIndex === 0 || submitting}
+            className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-medium text-foreground transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <path d="M19 12H5M11 6l-6 6 6 6" />
+            </svg>
+            Previous
+          </button>
+
+          {isLastPage ? (
             <button
               type="button"
-              onClick={goPrev}
-              disabled={index === 0 || submitting}
-              className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-medium text-foreground transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
+              onClick={handleSubmit}
+              disabled={submitting || answeredCount < total}
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
             >
+              {submitting ? "Submitting…" : "Submit answers"}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={goNext}
+              disabled={!pageAnswered}
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Next
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -225,45 +292,10 @@ function QuestionnairePage() {
                 strokeLinejoin="round"
                 aria-hidden
               >
-                <path d="M19 12H5M11 6l-6 6 6 6" />
+                <path d="M5 12h14M13 6l6 6-6 6" />
               </svg>
-              Previous
             </button>
-
-            {isLast ? (
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={submitting || answeredCount < total}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {submitting ? "Submitting…" : "Submit answers"}
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={goNext}
-                disabled={currentAnswer === undefined}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                Next
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
-                  <path d="M5 12h14M13 6l6 6-6 6" />
-                </svg>
-              </button>
-            )}
-          </div>
+          )}
         </div>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
