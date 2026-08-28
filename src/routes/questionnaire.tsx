@@ -211,18 +211,19 @@ function QuestionnairePage() {
                         onClick={() => select(item.id, opt.value)}
                         title={opt.label}
                         className={
-                          "flex items-center justify-center gap-1.5 rounded-lg border px-2 py-2.5 text-sm font-medium transition active:scale-[0.99] sm:flex-col sm:gap-1 " +
+                          "flex items-center justify-start gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium transition active:scale-[0.99] sm:flex-col sm:justify-center sm:gap-1 sm:px-2 sm:text-center " +
                           (selected
                             ? "border-primary bg-primary text-primary-foreground shadow-sm"
                             : "border-border bg-background text-foreground hover:border-ring hover:bg-accent")
                         }
                       >
-                        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-current text-xs font-bold opacity-80">
+                        <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-current text-xs font-bold opacity-80">
                           {opt.value}
                         </span>
-                        <span className="hidden sm:block sm:text-xs sm:font-normal sm:opacity-80">
+                        <span className="text-sm leading-tight sm:text-[11px] sm:font-normal sm:opacity-80">
                           {opt.label}
                         </span>
+
                       </button>
                     );
                   })}
