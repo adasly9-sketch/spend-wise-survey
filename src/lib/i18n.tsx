@@ -800,8 +800,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       return Array.isArray(fb) ? fb : [];
     };
     const tBig5 = (id: number) => {
-      const map = (d.big5 as Record<string, string>) || {};
-      return map[String(id)] ?? (dict.en.big5 as Record<string, string>)[String(id)] ?? "";
+      const map = (d["big5"] as Record<string, string>) || {};
+      return map[String(id)] ?? (dict.en["big5"] as Record<string, string>)[String(id)] ?? "";
     };
     return { lang, setLang, t, tArr, tBig5 };
   }, [lang, setLang]);
