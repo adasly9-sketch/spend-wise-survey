@@ -83,11 +83,13 @@ function ConsentPage() {
         <article className="space-y-7 rounded-2xl border border-border bg-card p-6 text-sm leading-relaxed text-foreground shadow-sm sm:p-8">
           <Section title="What is the purpose of this study?">
             <p>
-              The purpose of this research is to investigate individual
-              differences in psychological characteristics and everyday
-              behaviours. The study aims to explore whether certain individual
-              characteristics are associated with differences in people's
-              everyday choices, experiences, and behaviours.
+              This study is conducted by researchers at the University of
+              Warsaw, Faculty of Psychology. The purpose of this research is to
+              investigate individual differences in psychological
+              characteristics and everyday behaviours. The study aims to
+              explore whether certain individual characteristics are associated
+              with differences in people's everyday choices, experiences, and
+              behaviours.
             </p>
             <p>
               To avoid influencing participants' responses, the specific
