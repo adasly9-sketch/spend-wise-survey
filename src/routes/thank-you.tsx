@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/thank-you")({
   head: () => ({
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/thank-you")({
 });
 
 function ThankYouPage() {
+  const { t } = useT();
   const [declined, setDeclined] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -62,19 +64,17 @@ function ThankYouPage() {
           </svg>
         </div>
         <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-          Thank you
+          {t("thanks_title")}
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground whitespace-pre-line">
-          {declined
-            ? "You chose not to take part in this study.\u00A0\nNo data has been collected from you, and none will be stored."
-            : "Thank you for your time. No data has been collected from you."}
+          {declined ? t("thanks_declined") : t("thanks_generic")}
         </p>
         <div className="mt-8">
           <Link
             to="/"
             className="inline-flex items-center justify-center rounded-lg border border-input bg-background px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-accent"
           >
-            Back to start
+            {t("back_to_start")}
           </Link>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/debriefing")({
   head: () => ({
@@ -25,15 +26,9 @@ export const Route = createFileRoute("/debriefing")({
   component: DebriefingPage,
 });
 
-const SPENDING_AREAS = [
-  "Skincare and cosmetics",
-  "Clothing and accessories purchased primarily for appearance",
-  "Hair treatments and styling",
-  "Cosmetic or aesthetic procedures",
-  "Fitness and body-composition products",
-];
-
 function DebriefingPage() {
+  const { t, tArr } = useT();
+
   return (
     <div className="min-h-screen bg-background px-4 py-10 sm:py-16">
       <div className="mx-auto max-w-2xl">
@@ -55,34 +50,26 @@ function DebriefingPage() {
             </svg>
           </div>
           <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-            Research Debriefing Form
+            {t("debrief_eyebrow")}
           </p>
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Thank you for participating!
+            {t("debrief_title")}
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            Thank you for taking the time to complete this study.
+            {t("debrief_intro")}
           </p>
         </header>
 
         <article className="space-y-7 rounded-2xl border border-border bg-card p-6 text-sm leading-relaxed text-foreground shadow-sm sm:p-8">
           <section className="space-y-3">
             <h2 className="text-lg font-semibold tracking-tight">
-              What was this study about?
+              {t("debrief_h_about")}
             </h2>
-            <p>
-              The purpose of this study was to investigate the relationship
-              between personality traits and appearance-related spending.
-            </p>
-            <p>
-              More specifically, the study examined whether individual
-              differences in personality, particularly Neuroticism and
-              Conscientiousness, are associated with the amount people spend on
-              products and services related to their physical appearance.
-            </p>
-            <p>Appearance-related spending in this study includes areas such as:</p>
+            <p>{t("debrief_about_1")}</p>
+            <p>{t("debrief_about_2")}</p>
+            <p>{t("debrief_about_3")}</p>
             <ul className="space-y-1.5 border-l-2 border-primary/40 pl-4">
-              {SPENDING_AREAS.map((item) => (
+              {tArr("debrief_areas").map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
@@ -93,82 +80,50 @@ function DebriefingPage() {
 
           <section className="space-y-3">
             <h2 className="text-lg font-semibold tracking-tight">
-              What were the researchers expecting to find?
+              {t("debrief_h_expect")}
             </h2>
-            <p>The study was based on the following hypotheses:</p>
+            <p>{t("debrief_expect_intro")}</p>
             <div className="space-y-3">
               <p className="rounded-xl bg-muted p-4">
-                <span className="font-semibold">Hypothesis 1:</span> Higher
-                levels of Neuroticism will be associated with greater
-                appearance-related spending.
+                <span className="font-semibold">{t("debrief_h1_label")}</span>{" "}
+                {t("debrief_h1_text")}
               </p>
               <p className="rounded-xl bg-muted p-4">
-                <span className="font-semibold">Hypothesis 2:</span> Higher
-                levels of Conscientiousness will be associated with
-                appearance-related spending, particularly spending related to
-                health and fitness.
+                <span className="font-semibold">{t("debrief_h2_label")}</span>{" "}
+                {t("debrief_h2_text")}
               </p>
             </div>
-            <p className="text-muted-foreground">
-              These hypotheses are predictions and are not guaranteed outcomes.
-              The collected data will be used to determine whether the predicted
-              relationships are supported.
-            </p>
+            <p className="text-muted-foreground">{t("debrief_expect_note")}</p>
           </section>
 
           <div className="h-px w-full bg-border" />
 
           <section className="space-y-3">
             <h2 className="text-lg font-semibold tracking-tight">
-              Why is this research important?
+              {t("debrief_h_why")}
             </h2>
-            <p>
-              Appearance-related spending is an important part of everyday
-              consumer behaviour. However, the individual characteristics that
-              may be associated with differences in this type of spending are
-              not fully understood.
-            </p>
-            <p>
-              By examining the relationship between personality traits and
-              appearance-related spending, this research may contribute to a
-              better understanding of personality psychology and consumer
-              behaviour. The results may also help researchers better understand
-              why individuals differ in the amount they spend on
-              appearance-related products and services.
-            </p>
+            <p>{t("debrief_why_1")}</p>
+            <p>{t("debrief_why_2")}</p>
           </section>
 
           <div className="h-px w-full bg-border" />
 
           <section className="space-y-3">
             <h2 className="text-lg font-semibold tracking-tight">
-              Your participation
+              {t("debrief_h_you")}
             </h2>
-            <p>
-              Your responses are valuable to this research. By answering the
-              questions honestly and to the best of your knowledge, you have
-              helped contribute to the data used to investigate these
-              relationships.
-            </p>
-            <p>
-              There were no right or wrong answers to the personality or
-              spending questions. The study was interested in your genuine
-              responses and individual experiences.
-            </p>
+            <p>{t("debrief_you_1")}</p>
+            <p>{t("debrief_you_2")}</p>
           </section>
 
           <div className="h-px w-full bg-border" />
 
           <section className="space-y-2">
-            <h2 className="text-lg font-semibold tracking-tight">Thank you!</h2>
-            <p>
-              We sincerely appreciate your time and participation in this
-              research.
-            </p>
-            <p>
-              If you have any questions about the study or would like further
-              information, please contact:
-            </p>
+            <h2 className="text-lg font-semibold tracking-tight">
+              {t("debrief_h_thanks")}
+            </h2>
+            <p>{t("debrief_thanks_1")}</p>
+            <p>{t("debrief_thanks_2")}</p>
             <p className="font-medium">
               <a
                 href="mailto:empirical.psyuw@gmail.com"
@@ -189,12 +144,12 @@ function DebriefingPage() {
             to="/"
             className="inline-flex items-center justify-center rounded-lg border border-input bg-background px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-accent"
           >
-            Back to start
+            {t("back_to_start")}
           </Link>
         </div>
 
         <footer className="mt-6 text-center text-xs text-muted-foreground">
-          Anonymous academic research · University of Warsaw
+          {t("debrief_footer")}
         </footer>
       </div>
     </div>
