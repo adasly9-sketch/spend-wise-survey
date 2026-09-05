@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/survey")({
   head: () => ({
@@ -23,29 +24,23 @@ export const Route = createFileRoute("/survey")({
   component: SurveyPage,
 });
 
+// Stored values stay identical across languages so the data records never change.
 const SPEND_RANGES = [
-  { value: "0", label: "0% — None" },
-  { value: "1-5", label: "1–5%" },
-  { value: "6-10", label: "6–10%" },
-  { value: "11-15", label: "11–15%" },
-  { value: "16-25", label: "16–25%" },
-  { value: "26-40", label: "26–40%" },
-  { value: "41-60", label: "41–60%" },
-  { value: "61+", label: "Over 60%" },
+  { value: "0", key: "spend_0" },
+  { value: "1-5", key: "spend_1_5" },
+  { value: "6-10", key: "spend_6_10" },
+  { value: "11-15", key: "spend_11_15" },
+  { value: "16-25", key: "spend_16_25" },
+  { value: "26-40", key: "spend_26_40" },
+  { value: "41-60", key: "spend_41_60" },
+  { value: "61+", key: "spend_61" },
 ] as const;
 
-const EXAMPLE_ITEMS = [
-  "Hair trimming & hair care",
-  "Makeup",
-  "Skincare",
-  "Anti-aging products",
-  "Fitness & body-composition products (e.g. push-up bras, shaping underwear, gym supplements)",
-  "Cosmetics",
-  "Clothing",
-  "Accessories",
-];
-
-const GENDER_OPTIONS = ["Female", "Male", "Prefer not to say"] as const;
+const GENDER_OPTIONS = [
+  { value: "Female", key: "gender_female" },
+  { value: "Male", key: "gender_male" },
+  { value: "Prefer not to say", key: "gender_na" },
+] as const;
 
 interface ErrorState {
   age?: string;
@@ -67,6 +62,7 @@ interface TouchedState {
 
 function SurveyPage() {
   const navigate = useNavigate();
+  const { t } = useT();
 
   const [age, setAge] = useState("");
   const [gender, setGender] = useState<string>("");
@@ -87,12 +83,12 @@ function SurveyPage() {
 
   const validate = () => {
     const next: ErrorState = {};
-    if (!ageValid) next.age = "Please enter a whole number between 16 and 100.";
-    if (!genderValid) next.gender = "Please select an option.";
-    if (!nationalityValid) next.nationality = "Please enter your nationality.";
-    if (!spendValid) next.spendRange = "Please select an estimated range.";
-    if (!careerValid) next.career = "Please describe your current occupation or field.";
-    if (!emailValid) next.email = "Please enter a valid email address, or leave this field empty.";
+    if (!ageValid) next.age = t("q_age_err");
+    if (!genderValid) next.gender = t("q_gender_err");
+    if (!nationalityValid) next.nationality = t("q_nat_err");
+    if (!spendValid) next.spendRange = t("q_spend_err");
+    if (!careerValid) next.career = t("q_career_err");
+    if (!emailValid) next.email = t("q_email_err");
     setErrors(next);
     setTouched({ age: true, gender: true, nationality: true, spendRange: true, career: true, email: true });
     return !next.age && !next.gender && !next.nationality && !next.spendRange && !next.career && !next.email;
@@ -127,22 +123,21 @@ function SurveyPage() {
         {/* Header */}
         <header className="mb-8 text-center">
           <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-            Academic Research Survey
+            {t("survey_eyebrow")}
           </p>
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Spending on Physical Appearance
+            {t("survey_title")}
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            Part 1 of 2. Your answers are anonymous and used solely for academic
-            research. This short survey takes about 2 minutes.
+            {t("survey_intro")}
           </p>
           <div className="mt-4 flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground">
             <span className="inline-flex h-6 items-center rounded-full bg-primary px-3 text-primary-foreground">
-              1 · Survey
+              {t("step_survey")}
             </span>
             <span aria-hidden>›</span>
             <span className="inline-flex h-6 items-center rounded-full border border-border px-3">
-              2 · Questionnaire
+              {t("step_questionnaire")}
             </span>
           </div>
         </header>
@@ -155,8 +150,8 @@ function SurveyPage() {
           {/* Q1 — Age */}
           <Field
             number={1}
-            label="What is your age?"
-            hint="Enter your age in years."
+            label={t("q_age_label")}
+            hint={t("q_age_hint")}
             error={touched.age ? errors.age : undefined}
           >
             <input
@@ -167,8 +162,8 @@ function SurveyPage() {
               step={1}
               value={age}
               onChange={(e) => setAge(e.target.value)}
-              onBlur={() => setTouched((t) => ({ ...t, age: true }))}
-              placeholder="e.g. 24"
+              onBlur={() => setTouched((t2) => ({ ...t2, age: true }))}
+              placeholder={t("q_age_ph")}
               className="w-full max-w-[12rem] rounded-lg border border-input bg-background px-3 py-2.5 text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/30"
             />
           </Field>
@@ -178,20 +173,20 @@ function SurveyPage() {
           {/* Q2 — Gender */}
           <Field
             number={2}
-            label="What is your gender?"
-            hint="Select the option that best describes you."
+            label={t("q_gender_label")}
+            hint={t("q_gender_hint")}
             error={touched.gender ? errors.gender : undefined}
           >
             <div className="flex flex-wrap gap-2">
               {GENDER_OPTIONS.map((opt) => {
-                const selected = gender === opt;
+                const selected = gender === opt.value;
                 return (
                   <button
-                    key={opt}
+                    key={opt.value}
                     type="button"
                     onClick={() => {
-                      setGender(opt);
-                      setTouched((t) => ({ ...t, gender: true }));
+                      setGender(opt.value);
+                      setTouched((t2) => ({ ...t2, gender: true }));
                     }}
                     aria-pressed={selected}
                     className={
@@ -201,7 +196,7 @@ function SurveyPage() {
                         : "border-border bg-background text-foreground hover:border-ring hover:bg-accent")
                     }
                   >
-                    {opt}
+                    {t(opt.key)}
                   </button>
                 );
               })}
@@ -213,16 +208,16 @@ function SurveyPage() {
           {/* Q3 — Nationality */}
           <Field
             number={3}
-            label="What is your nationality?"
-            hint="Enter the country you hold citizenship or identify with (e.g. “Polish”, “Turkish”, “American”)."
+            label={t("q_nat_label")}
+            hint={t("q_nat_hint")}
             error={touched.nationality ? errors.nationality : undefined}
           >
             <input
               type="text"
               value={nationality}
               onChange={(e) => setNationality(e.target.value)}
-              onBlur={() => setTouched((t) => ({ ...t, nationality: true }))}
-              placeholder="e.g. Polish"
+              onBlur={() => setTouched((t2) => ({ ...t2, nationality: true }))}
+              placeholder={t("q_nat_ph")}
               className="w-full max-w-sm rounded-lg border border-input bg-background px-3 py-2.5 text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/30"
             />
           </Field>
@@ -232,20 +227,17 @@ function SurveyPage() {
           {/* Q4 — Spending estimate */}
           <Field
             number={4}
-            label="Roughly what share of your disposable income do you spend on physical-appearance-related purchases?"
-            hint="Disposable income is the total amount of money you have left to spend or save after paying taxes and mandatory government deductions. Pick the range that best fits your typical spending."
+            label={t("q_spend_label")}
+            hint={t("q_spend_hint")}
             error={touched.spendRange ? errors.spendRange : undefined}
           >
             <div className="mb-4 border-l-2 border-primary/40 pl-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Includes, for example
+                {t("q_spend_includes")}
               </p>
-              <p className="mt-1 text-sm text-foreground">
-                {EXAMPLE_ITEMS.join(", ")}.
-              </p>
+              <p className="mt-1 text-sm text-foreground">{t("q_spend_examples")}</p>
               <p className="mt-2 text-xs italic text-muted-foreground">
-                Think about recurring and occasional spending together — not a
-                single month, but your typical pattern over a year.
+                {t("q_spend_note")}
               </p>
             </div>
 
@@ -258,7 +250,7 @@ function SurveyPage() {
                     type="button"
                     onClick={() => {
                       setSpendRange(opt.value);
-                      setTouched((t) => ({ ...t, spendRange: true }));
+                      setTouched((t2) => ({ ...t2, spendRange: true }));
                     }}
                     aria-pressed={selected}
                     className={
@@ -268,29 +260,28 @@ function SurveyPage() {
                         : "border-border bg-background text-foreground hover:border-ring hover:bg-accent")
                     }
                   >
-                    {opt.label}
+                    {t(opt.key)}
                   </button>
                 );
               })}
             </div>
           </Field>
 
-
           <Divider />
 
           {/* Q5 — Career */}
           <Field
             number={5}
-            label="What is your current career or occupation?"
-            hint="Describe your job title, field, or professional area (e.g. “marketing manager”, “student”, “teacher”, “nurse”, “self-employed designer”)."
+            label={t("q_career_label")}
+            hint={t("q_career_hint")}
             error={touched.career ? errors.career : undefined}
           >
             <input
               type="text"
               value={career}
               onChange={(e) => setCareer(e.target.value)}
-              onBlur={() => setTouched((t) => ({ ...t, career: true }))}
-              placeholder="e.g. software developer"
+              onBlur={() => setTouched((t2) => ({ ...t2, career: true }))}
+              placeholder={t("q_career_ph")}
               className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/30"
             />
           </Field>
@@ -300,34 +291,30 @@ function SurveyPage() {
           {/* Q6 — Email (optional) */}
           <Field
             number={6}
-            label="Would you like to take part in further studies? If so, please leave your email."
-            hint="This is entirely optional — you can skip this question and leave the box empty. Your email will only be used to contact you about future research."
+            label={t("q_email_label")}
+            hint={t("q_email_hint")}
             error={touched.email ? errors.email : undefined}
           >
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              onBlur={() => setTouched((t) => ({ ...t, email: true }))}
-              placeholder="optional — e.g. your.name@example.com"
+              onBlur={() => setTouched((t2) => ({ ...t2, email: true }))}
+              placeholder={t("q_email_ph")}
               className="w-full max-w-sm rounded-lg border border-input bg-background px-3 py-2.5 text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/30"
-              aria-label="Email address (optional)"
+              aria-label={t("q_email_label")}
             />
-            <p className="mt-2 text-xs text-muted-foreground">
-              Leaving this blank is perfectly fine.
-            </p>
+            <p className="mt-2 text-xs text-muted-foreground">{t("q_email_note")}</p>
           </Field>
 
           {/* Next */}
           <div className="mt-8 flex flex-col-reverse items-center justify-between gap-3 sm:flex-row">
-            <p className="text-xs text-muted-foreground">
-              You can review your answers before continuing.
-            </p>
+            <p className="text-xs text-muted-foreground">{t("survey_review")}</p>
             <button
               type="submit"
               className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 active:scale-[0.99] sm:w-auto"
             >
-              Next: Questionnaire
+              {t("survey_next")}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -347,7 +334,7 @@ function SurveyPage() {
         </form>
 
         <footer className="mt-6 text-center text-xs text-muted-foreground">
-          Anonymous academic research · No personal identifying data is collected.
+          {t("survey_footer")}
         </footer>
       </div>
     </div>
