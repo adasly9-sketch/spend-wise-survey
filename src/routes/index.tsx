@@ -101,7 +101,7 @@ function ConsentPage() {
           <Section title="What does your participation involve?">
             <p>
               Your participation involves completing an online questionnaire
-              that will take approximately 15 minutes to complete.
+              that will take approximately 10 minutes to complete.
             </p>
             <p>
               You will be asked questions about your personality, everyday
@@ -236,7 +236,7 @@ function ConsentPage() {
         </article>
 
         <footer className="mt-6 text-center text-xs text-muted-foreground">
-          Anonymous academic research · No personal identifying data is collected.
+          {"\n"}
         </footer>
       </div>
     </div>
