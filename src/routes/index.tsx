@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,19 +26,9 @@ export const Route = createFileRoute("/")({
   component: ConsentPage,
 });
 
-const CONSENT_POINTS = [
-  "I have read and understood the information provided above.",
-  "I understand that participation is voluntary.",
-  "I understand that I may withdraw from the study without penalty, subject to the point at which my data have been anonymised.",
-  "I understand what participation in the study involves.",
-  "I agree to answer all questions honestly and to the best of my knowledge.",
-  "I understand that there are no right or wrong answers.",
-  "I understand that the specific research relationships being investigated will be explained to me after completing the study.",
-  "I freely agree to participate in this research.",
-];
-
 function ConsentPage() {
   const navigate = useNavigate();
+  const { t, tArr } = useT();
 
   const handleConsent = () => {
     try {
@@ -70,107 +61,46 @@ function ConsentPage() {
       <div className="mx-auto max-w-2xl">
         <header className="mb-8 text-center">
           <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-            University of Warsaw · Psychology Faculty
+            {t("consent_eyebrow")}
           </p>
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Research Consent Form
+            {t("consent_title")}
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            Please read the following information carefully before proceeding.
+            {t("consent_intro")}
           </p>
         </header>
 
         <article className="space-y-7 rounded-2xl border border-border bg-card p-6 text-sm leading-relaxed text-foreground shadow-sm sm:p-8">
-          <Section title="What is the purpose of this study?">
-            <p>
-              This study is conducted by researchers at the University of
-              Warsaw, Faculty of Psychology. The purpose of this research is to
-              investigate individual differences in psychological
-              characteristics and everyday behaviours. The study aims to
-              explore whether certain individual characteristics are associated
-              with differences in people's everyday choices, experiences, and
-              behaviours.
-            </p>
-            <p>
-              To avoid influencing participants' responses, the specific
-              relationships being investigated will not be described in detail
-              before participation. A full explanation of the research purpose
-              and hypotheses will be provided in the debriefing information at
-              the end of the study.
-            </p>
+          <Section title={t("consent_h_purpose")}>
+            <p>{t("consent_purpose_1")}</p>
+            <p>{t("consent_purpose_2")}</p>
           </Section>
 
-          <Section title="What does your participation involve?">
-            <p>
-              Your participation involves completing an online questionnaire
-              that will take approximately 10 minutes to complete.
-            </p>
-            <p>
-              You will be asked questions about your personality, everyday
-              behaviours, spending habits, and some basic demographic
-              information such as age, gender, and income range.
-            </p>
-            <p>
-              Participation in this study is completely voluntary. If you decide
-              not to participate, there will be no negative consequences. If you
-              choose to participate, you may withdraw from the study at any time
-              without penalty and without having to provide a reason, subject to
-              the point at which your data have been anonymised.
-            </p>
+          <Section title={t("consent_h_involve")}>
+            <p>{t("consent_involve_1")}</p>
+            <p>{t("consent_involve_2")}</p>
+            <p>{t("consent_involve_3")}</p>
           </Section>
 
-          <Section title="Why is your participation important?">
-            <p>
-              Every participant's response is valuable. Your participation will
-              help us collect data and examine patterns between psychological
-              characteristics and everyday behaviour. The information collected
-              from participants will contribute to a better understanding of
-              individual differences and behavioural patterns.
-            </p>
-            <p>
-              Because this research relies on participants' individual
-              responses, it is particularly important that you answer all
-              questions honestly and to the best of your knowledge. There are no
-              right or wrong answers to the questions in this study. Honest
-              responses will help ensure that the results are as reliable and
-              meaningful as possible.
-            </p>
+          <Section title={t("consent_h_important")}>
+            <p>{t("consent_important_1")}</p>
+            <p>{t("consent_important_2")}</p>
           </Section>
 
-          <Section title="How will your personal information be kept?">
-            <p>
-              Your participation will be confidential and your responses will be
-              treated as anonymous. No personally identifiable information will
-              be collected as part of the study. The data will be analysed
-              collectively, meaning that individual participants will not be
-              identified in the research results.
-            </p>
-            <p>
-              The research data will be stored securely and access will be
-              restricted to the research team. Data will be handled in
-              accordance with applicable data protection requirements, including
-              GDPR regulations in Poland.
-            </p>
+          <Section title={t("consent_h_privacy")}>
+            <p>{t("consent_privacy_1")}</p>
+            <p>{t("consent_privacy_2")}</p>
           </Section>
 
-          <Section title="Are there any possible risks?">
-            <p>
-              This study is considered to involve low risk. Some questions may
-              ask you to reflect on personal characteristics, behaviours, or
-              spending habits, which may cause mild discomfort for some
-              participants. You may discontinue participation if you become
-              uncomfortable.
-            </p>
-            <p>
-              A full debriefing explaining the purpose of the research and what
-              the study was specifically investigating will be provided after
-              you complete the questionnaire.
-            </p>
+          <Section title={t("consent_h_risks")}>
+            <p>{t("consent_risks_1")}</p>
+            <p>{t("consent_risks_2")}</p>
           </Section>
 
-          <Section title="Contact information">
+          <Section title={t("consent_h_contact")}>
             <p>
-              If you have any questions about this study, please contact:{" "}
+              {t("consent_contact_prefix")}{" "}
               <a
                 href="mailto:empirical.psyuw@gmail.com"
                 className="font-medium underline underline-offset-4 hover:text-primary"
@@ -184,12 +114,10 @@ function ConsentPage() {
 
           <div className="h-px w-full bg-border" />
 
-          <Section title="Consent">
-            <p>
-              By selecting “YES – I give consent”, I confirm that:
-            </p>
+          <Section title={t("consent_h_consent")}>
+            <p>{t("consent_confirm")}</p>
             <ul className="space-y-2 border-l-2 border-primary/40 pl-4">
-              {CONSENT_POINTS.map((point) => (
+              {tArr("consent_points").map((point) => (
                 <li key={point}>{point}</li>
               ))}
             </ul>
@@ -197,7 +125,7 @@ function ConsentPage() {
 
           <div>
             <p className="text-sm font-semibold text-foreground">
-              Please select one:
+              {t("consent_select_one")}
             </p>
             <div className="mt-4 flex flex-col gap-3 sm:flex-row">
               <button
@@ -205,7 +133,7 @@ function ConsentPage() {
                 onClick={handleConsent}
                 className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-6 py-4 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 active:scale-[0.99]"
               >
-                YES — I give my consent to participate
+                {t("consent_yes")}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -226,13 +154,11 @@ function ConsentPage() {
                 onClick={handleDecline}
                 className="inline-flex flex-1 items-center justify-center rounded-lg border border-input bg-background px-6 py-4 text-sm font-semibold text-foreground transition hover:bg-accent"
               >
-                NO — I do not agree to participate
+                {t("consent_no")}
               </button>
             </div>
             <p className="mt-3 text-xs text-muted-foreground">
-              Selecting YES confirms you have read and understood the
-              information above, agree to these terms, and will answer the
-              questions honestly and to the best of your knowledge.
+              {t("consent_yes_hint")}
             </p>
           </div>
         </article>
