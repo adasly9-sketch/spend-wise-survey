@@ -347,7 +347,7 @@ const dict: Record<Lang, Dict> = {
     q_spend_label:
       "Kullanılabilir gelirinizin yaklaşık ne kadarını fiziksel görünümle ilgili harcamalara ayırıyorsunuz?",
     q_spend_hint:
-      "Kullanılabilir gelir; vergiler ve zorunlu devlet kesintileri ödendikten sonra harcamak veya biriktirmek için elinizde kalan toplam paradır. Tipik harcamanıza en uygun aralığı seçin.",
+      "Kullanılabilir gelir; vergiler, kira ve zorunlu devlet kesintileri ödendikten sonra harcamak veya biriktirmek için elinizde kalan toplam paradır. Tipik harcamanıza en uygun aralığı seçin.",
     q_spend_err: "Lütfen tahmini bir aralık seçin.",
     q_spend_includes: "Örneğin şunları içerir",
     q_spend_examples:
