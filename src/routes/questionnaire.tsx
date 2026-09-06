@@ -7,6 +7,7 @@ import {
   computeScores,
   type Answers,
 } from "@/lib/big5";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/questionnaire")({
   head: () => ({
@@ -56,6 +57,7 @@ function buildPages(total: number) {
 
 function QuestionnairePage() {
   const navigate = useNavigate();
+  const { t, tBig5 } = useT();
   const [pageIndex, setPageIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [submitting, setSubmitting] = useState(false);
@@ -91,7 +93,7 @@ function QuestionnairePage() {
 
   const handleSubmit = async () => {
     if (answeredCount < total) {
-      setError("Please answer every question before submitting.");
+      setError(t("q_error_all"));
       return;
     }
     setSubmitting(true);
@@ -120,7 +122,7 @@ function QuestionnairePage() {
 
     if (insertError) {
       setSubmitting(false);
-      setError("Something went wrong while saving your answers. Please try again.");
+      setError(t("q_error_save"));
       return;
     }
 
@@ -140,20 +142,18 @@ function QuestionnairePage() {
         <header className="mb-6 text-center">
           <div className="flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground">
             <span className="inline-flex h-6 items-center rounded-full border border-border px-3">
-              1 · Survey
+              {t("step_survey")}
             </span>
             <span aria-hidden>›</span>
             <span className="inline-flex h-6 items-center rounded-full bg-primary px-3 text-primary-foreground">
-              2 · Questionnaire
+              {t("step_questionnaire")}
             </span>
           </div>
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Questionnaire
+            {t("questionnaire_title")}
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            Part 2 of the study. Read each statement and choose how much you
-            agree or disagree. There are no right or wrong answers — answer
-            honestly and go with your first impression.
+            {t("questionnaire_intro")}
           </p>
         </header>
 
@@ -161,9 +161,9 @@ function QuestionnairePage() {
         <div className="sticky top-0 z-10 -mx-4 bg-background/90 px-4 py-3 backdrop-blur">
           <div className="mx-auto max-w-2xl">
             <div className="mb-1.5 flex items-center justify-between text-xs font-medium text-muted-foreground">
-              <span>{progress}% complete</span>
+              <span>{t("percent_complete", { n: String(progress) })}</span>
               <span>
-                Page {pageIndex + 1} of {pages.length}
+                {t("page_of", { a: String(pageIndex + 1), b: String(pages.length) })}
               </span>
             </div>
             <div
@@ -172,7 +172,7 @@ function QuestionnairePage() {
               aria-valuenow={progress}
               aria-valuemin={0}
               aria-valuemax={100}
-              aria-label="Questionnaire progress"
+              aria-label={t("questionnaire_title")}
             >
               <div
                 className="h-full rounded-full bg-primary transition-all duration-300"
@@ -193,7 +193,7 @@ function QuestionnairePage() {
               >
                 <p className="text-base font-semibold leading-snug text-foreground sm:text-lg">
                   <span className="mr-2 text-muted-foreground">{item.id}.</span>
-                  {item.text}
+                  {tBig5(item.id)}
                 </p>
                 <div
                   className="mt-4 grid grid-cols-1 gap-1.5 sm:grid-cols-5"
@@ -209,7 +209,7 @@ function QuestionnairePage() {
                         role="radio"
                         aria-checked={selected}
                         onClick={() => select(item.id, opt.value)}
-                        title={opt.label}
+                        title={t(`likert_${opt.value}`)}
                         className={
                           "flex items-center justify-start gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium transition active:scale-[0.99] sm:flex-col sm:justify-center sm:gap-1 sm:px-2 sm:text-center " +
                           (selected
@@ -221,7 +221,7 @@ function QuestionnairePage() {
                           {opt.value}
                         </span>
                         <span className="text-sm leading-tight sm:text-[11px] sm:font-normal sm:opacity-80">
-                          {opt.label}
+                          {t(`likert_${opt.value}`)}
                         </span>
 
                       </button>
@@ -261,7 +261,7 @@ function QuestionnairePage() {
             >
               <path d="M19 12H5M11 6l-6 6 6 6" />
             </svg>
-            Previous
+            {t("previous")}
           </button>
 
           {isLastPage ? (
@@ -271,7 +271,7 @@ function QuestionnairePage() {
               disabled={submitting || answeredCount < total}
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {submitting ? "Submitting…" : "Submit answers"}
+              {submitting ? t("submitting") : t("submit")}
             </button>
           ) : (
             <button
@@ -280,7 +280,7 @@ function QuestionnairePage() {
               disabled={!pageAnswered}
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Next
+              {t("next")}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -300,9 +300,9 @@ function QuestionnairePage() {
         </div>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          You must answer every question before you can submit.{" "}
+          {t("q_bottom_note")}{" "}
           <Link to="/survey" className="underline underline-offset-2 hover:text-foreground">
-            Back to survey
+            {t("back_to_survey")}
           </Link>
         </p>
       </div>
