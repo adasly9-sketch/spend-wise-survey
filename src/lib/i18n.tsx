@@ -469,7 +469,7 @@ const dict: Record<Lang, Dict> = {
       "15": "Canlı bir hayal gücüm var.",
       "16": "Kendimi arka planda tutarım.",
       "17": "Başkalarının duygularına empati kurarım.",
-      "18": "İşleri dağıtırım.",
+      "18": "Düzensizimdir.",
       "19": "Nadiren mutsuz hissederim.",
       "20": "Soyut fikirlerle ilgilenmem.",
       "21": "Sohbet başlatırım.",
